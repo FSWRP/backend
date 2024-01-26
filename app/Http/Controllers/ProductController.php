@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use Illuminate\Http\Request;
-use LDAP\Result;
-use Psy\CodeCleaner\ReturnTypePass;
 
 class ProductController extends Controller
 {
@@ -14,7 +12,7 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $result = ['name'=> 'index','payload' => Product::all()];
+        $result = ['name' => 'index', 'payload' => Product::all()];
         return $result;
     }
 
@@ -23,7 +21,12 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        Product::create([
+            "product_name" => $request->pd_name,
+            "product_type" => $request->pd_type,
+            "price" => $request->pd_price
+        ]);
+        return "Insert Successful";
     }
 
     /**
@@ -31,9 +34,8 @@ class ProductController extends Controller
      */
     public function show(string $id)
     {
-        // Select * From Products Where id = 1
         $payload = Product::find($id);
-        return ['name' =>'show','payload'=> $payload];
+        return ['name' => 'show', 'payload' => $payload];
     }
 
     /**
@@ -41,7 +43,15 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+    // return ["id"=> $id, "request"=>$request];
+
+        $product = Product::find($id);
+
+        $product->product_name = $request->pd_name;
+
+        $product->save();
+
+        return "update Successful";
     }
 
     /**
@@ -49,6 +59,9 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $product = Product::find($id);
+        $product->delete();
+
+        return "delete Successful";
     }
 }
